@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import *
 from ui_calculator import *
 import math
+from decimal import Decimal, getcontext
 
-class calc_logic(QMainWindow, Ui_UI_Calculator):
+class Calc_Logic(QMainWindow, Ui_UI_Calculator):
     def __init__(self) -> None:
         """
         Method to initialize the Calculator controls
@@ -18,6 +19,8 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
         self.previous_value = ''
         self.current_operator = None
 
+        # Sets precision to 10 decimal places
+        getcontext().prec = 10
 
         # Connect number buttons
         self.zero.clicked.connect(lambda: self.number_pressed('0'))
@@ -57,12 +60,11 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
 
     def percentage_conversion(self):
         pass
-
+    # TODO: Fix both square functions
     def square_x(self):
-        self.current_operator = 'square'
+        self.current_operator = 'square_x'
         if self.current_value:
-            # Perform the addition
-            result = math.sqrt(float(self.current_value))
+            result = math.pow(Decimal(self.current_value), 2)
             self.previous_value = str(result)
             return result
         elif self.current_value:
@@ -71,16 +73,23 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
             return None
 
     def square_root_x(self):
-        pass
+        self.current_operator = 'square_root_x'
+        if self.current_value:
+            result = Decimal(self.current_value).sqrt()
+            self.previous_value = str(result)
+            return result
+        elif self.current_value:
+            self.previous_value = self.current_value
+            self.current_value = ''
+            return None
 
     def division(self):
         self.current_operator = 'divide'
         if self.current_value and self.previous_value:
-            # Perform the addition
             if self.current_value == '0':
                 return "ERROR"
             else:
-                result = float(self.previous_value) / float(self.current_value)
+                result = Decimal(self.previous_value) / Decimal(self.current_value)
                 self.previous_value = str(result)
                 return result
         elif self.current_value:
@@ -94,8 +103,7 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
     def multiplication(self):
         self.current_operator = 'multiply'
         if self.current_value and self.previous_value:
-            # Perform the addition
-            result = float(self.previous_value) * float(self.current_value)
+            result = Decimal(self.previous_value) * Decimal(self.current_value)
             self.previous_value = str(result)
             return result
         elif self.current_value:
@@ -106,8 +114,7 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
     def subtract(self):
         self.current_operator = 'subtract'
         if self.current_value and self.previous_value:
-            # Perform the addition
-            result = float(self.previous_value) - float(self.current_value)
+            result = Decimal(self.previous_value) - Decimal(self.current_value)
             self.previous_value = str(result)
             return result
         elif self.current_value:
@@ -118,8 +125,7 @@ class calc_logic(QMainWindow, Ui_UI_Calculator):
     def add(self):
             self.current_operator = 'add'
             if self.current_value and self.previous_value:
-                    # Perform the addition
-                    result = float(self.previous_value) + float(self.current_value)
+                    result = Decimal(self.previous_value) + Decimal(self.current_value)
                     self.previous_value = str(result)
                     return result
             elif self.current_value:

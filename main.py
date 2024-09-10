@@ -2,7 +2,7 @@ from logic import *
 
 def main():
     application = QApplication([])
-    Calculator = calc_logic()
+    Calculator = Calc_Logic()
     Calculator.show()
     application.exec()
 
